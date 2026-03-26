@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+        <meta charset="UTF-8">
+        <title>Ⅰ 한번 생각해 봅시다│CivilEngineeringLab</title>
+        <style>
+                :root {
+                        --sidebar-width: 300px;
+                        --primary-blue: #3498db;
+                        --text-color: #333;
+                        --border-color: #eee;
+                }
+
+                * { box-sizing: border-box; }
+
+                body {
+                        font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+                        margin: 0;
+                        display: flex;
+                        color: var(--text-color);
+                        line-height: 1.7;
+                        height: 100vh;
+                        overflow: hidden;
+                }
+
+                /* 1. 좌측 사이드바 스타일 */
+                nav {
+                        width: var(--sidebar-width);
+                        height: 100vh;
+                        border-right: 1px solid var(--border-color);
+                        background: #fff;
+                        padding: 40px 20px;
+                        overflow-y: auto;
+                        flex-shrink: 0;
+                }
+
+                .nav-category { 
+                        font-size: 13px; 
+                        color: #888; 
+                        font-weight: bold; 
+                        margin-top: 30px; 
+                        margin-bottom: 10px; 
+                        border-bottom: 1px solid #f0f0f0; 
+                        padding-bottom: 5px; 
+                        text-transform: uppercase;
+                }
+
+                nav ul { list-style: none; padding: 0; margin: 0; }
+
+                .depth-chapter {
+                        font-weight: bold;
+                        color: #333;
+                        margin-top: 15px;
+                        padding: 10px 12px;
+                        cursor: pointer;
+                        border-radius: 4px;
+                        transition: 0.2s;
+                }
+
+                .depth-chapter:hover { background: #f5f5f5; }
+
+                .sub-menu-list {
+                        display: none;
+                        padding-left: 15px;
+                        margin-bottom: 10px;
+                }
+
+                .sub-menu-list.show { display: block; }
+
+                nav li.depth-item {
+                        padding: 8px 12px;
+                        font-size: 14px;
+                        cursor: pointer;
+                        border-radius: 4px;
+                        color: #666;
+                        transition: 0.2s;
+                }
+
+                nav li.depth-item:hover { color: var(--primary-blue); background: #f9f9f9; }
+                nav li.active { background: #eef7fe; color: var(--primary-blue); font-weight: bold; }
+
+                /* 2. 중앙 콘텐츠 영역 레이아웃 (중요: 샘플.png 여백 반영) */
+                main {
+                        flex: 1;
+                        height: 100vh;
+                        overflow-y: auto;
+                        background: #fff;
+                        padding: 0; /* 내부 여백은 article에서 조절 */
+                }
+
+                article {
+                        max-width: 950px;      /* 본문 너비 최적화 */
+                        margin: 0 auto;        /* 중앙 정렬 */
+                        padding: 80px 50px;    /* 상하좌우 충분한 여백 확보 */
+                        display: none;         /* 기본적으로 숨김 */
+                }
+
+                article.active { display: block; }
+
+                /* 우측 여백 스페이서 */
+                .right-spacer {
+                        width: var(--sidebar-width);
+                        flex-shrink: 0;
+                        background: #fff;
+                }
+
+                /* 3. 본문 요소 스타일 */
+                h1 { font-size: 32px; border-bottom: 1px solid #eee; padding-bottom: 20px; margin-bottom: 30px; letter-spacing: -1px; }
+                h2 { font-size: 24px; margin-top: 50px; margin-bottom: 20px; font-weight: 700; }
+                h3 { font-size: 19px; color: var(--primary-blue); margin-top: 30px; margin-bottom: 15px; }
+                p { margin-bottom: 22px; text-align: justify; color: #444; }
+                hr { border: 0; border-top: 1px solid #eee; margin: 50px 0; }
+
+                /* 4. 특수 박스 컴포넌트 스타일 (가독성 강화) */
+                .note-box {
+                        background-color: #f7fbff;
+                        border: 1px solid #3498db;
+                        padding: 25px 30px;
+                        border-radius: 6px;
+                        margin: 40px 0;
+                }
+
+                .tip-box {
+                        background-color: #fdf7ff;
+                        border: 1px solid #9b59b6;
+                        padding: 25px 30px;
+                        border-radius: 6px;
+                        margin: 40px 0;
+                }
+
+                .summary-box {
+                        background-color: #f9f9f9;
+                        border: 1px solid #ddd;
+                        padding: 25px 30px;
+                        border-radius: 6px;
+                        margin: 40px 0;
+                }
+
+    		.summary-box ul { 
+			margin: 0; 
+			padding-left: 20px; 
+			font-size: 15.5px;     /* 본문 및 참고 박스 글자 크기와 일치 [3] */
+			line-height: 1.6;      /* 위아래 줄간격을 짧게 조정 [136 대비] */
+			color: #444; 
+		}
+                
+                .bold { font-weight: bold; color: #000; }
+                
+                img { border: 1px solid #eee; border-radius: 4px; }
+        </style>
+</head>
+<body>
+
+        <!-- 좌측 사이드바 영역 [1-4] -->
+        <nav>
+                <div class="nav-category">제1편 한번 생각해 봅시다</div>
+                <ul>
+                        <!-- 1장 -->
+                        <li class="depth-chapter" onclick="toggleChapter('chapter1')">1장. 되돌아보니…</li>
+                        <ul id="chapter1" class="sub-menu-list show">
+                                <li class="depth-item" onclick="tab('sec1-1')">건설 선진국의 기술</li>
+                                <li class="depth-item" onclick="tab('sec1-2')">기술과 매뉴얼</li>
+                                <li class="depth-item" onclick="tab('sec1-3')">기술축적</li>
+                                <li class="depth-item" onclick="tab('sec1-4')">발전과 변화</li>
+                                <li class="depth-item" onclick="tab('sec1-5')">발췌) 시련은 있어도 실패는 없다</li>
+                                <li class="depth-item" onclick="tab('sec1-6')">발췌) 엔지니어링 경제</li>
+                        </ul>
+
+                        <!-- 2장 -->
+                        <li class="depth-chapter" onclick="toggleChapter('chapter2')">2장. 국내 토목설계의 현 상황</li>
+                        <ul id="chapter2" class="sub-menu-list show">
+                                <li class="depth-item" onclick="tab('sec2-1')">경쟁력</li>
+                                <li class="depth-item" onclick="tab('sec2-2')">PQ 실적</li>
+                                <li class="depth-item" onclick="tab('sec2-3')">절차와 규정</li>
+                                <li class="depth-item" onclick="tab('sec2-4')">남의 탓</li>
+                                <li class="depth-item" onclick="tab('sec2-5')">발췌) 발로 쓴 터널 이야기</li>
+                        </ul>
+
+        		<!-- 3장 -->
+			<li class="depth-chapter" onclick="toggleChapter('chapter3')">3장. 생각해보면</li>
+			<ul id="chapter3" class="sub-menu-list show">
+				<li class="depth-item" onclick="tab('sec3-1')">가치 인식</li>
+				<li class="depth-item" onclick="tab('sec3-2')">전문가</li>
+				<li class="depth-item" onclick="tab('sec3-3')">하던 대로</li>
+				<li class="depth-item" onclick="tab('sec3-4')">익숙함과 프로정신</li>
+				<li class="depth-item" onclick="tab('sec3-5')">전략적 무지</li>
+				<li class="depth-item" onclick="tab('sec3-6')">발췌) 한국의 건설 현장</li>
+			</ul>
+
+			<!-- 4장 -->
+			<li class="depth-chapter" onclick="toggleChapter('chapter4')">4장. 시대적 흐름과 변화의 인식</li>
+			<ul id="chapter4" class="sub-menu-list show">
+				<li class="depth-item" onclick="tab('sec4-1')">독자적 생존 전략</li>
+				<li class="depth-item" onclick="tab('sec4-2')">21세기 형식지란?</li>
+				<li class="depth-item" onclick="tab('sec4-3')">스마트건설</li>
+				<li class="depth-item" onclick="tab('sec4-4')">In-house S/W</li>
+				<li class="depth-item" onclick="tab('sec4-5')">지식재산권</li>
+				<li class="depth-item" onclick="tab('sec4-6')">발췌) 대한토목학회 Paper</li>
+			</ul>
+
+			<!-- 5장 -->
+			<li class="depth-chapter" onclick="toggleChapter('chapter5')">5장. 한번 생각해 봅시다”를 마치며</li>
+			<ul id="chapter5" class="sub-menu-list show">
+				<li class="depth-item" onclick="tab('sec5-1')">인재육성</li>
+				<li class="depth-item" onclick="tab('sec5-2')">정리해 보면</li>
+				<li class="depth-item" onclick="tab('sec5-3')">글을 마치며</li>
+			</ul>
+
+			<!-- 부록 -->
+			<li class="depth-chapter" onclick="toggleChapter('chapter6')">부록</li>
+			<ul id="chapter6" class="sub-menu-list show">
+				<li class="depth-item" onclick="tab('sec6-1')">내가 경험한 외국사 이야기</li>
+				<li class="depth-item" onclick="tab('sec6-2')">토목공학과 취업 현황과 기술자 수</li>
+			</ul>
+		</nav>
+
+    <!-- 중앙 요약 영역 -->
+    <main id="main-content">
+       
+        <!-- 1.1 건설 선진국의 기술 -->
+        <article id="sec1-1">
+                <h1>건설 선진국의 기술</h1>
+                <p>
+                        건설 선진국의 기술자들은 적절한 성과물을 얻기 위해 자신들의 기술과 경험이 축적된 <span class="bold">매뉴얼</span>을 만들었다 [1]. 독일의 Dywidag社와 같은 기업의 힘은 탁월한 개인 능력이 아니라 조직적으로 정리된 시스템에서 나온다.
+                </p>
+
+                <h2>1. 선진 기술의 힘, '매뉴얼'</h2>
+                <p>
+                        과거 ILM 교량 현장에서 독일 기술자가 문제를 해결하는 방식은 놀라웠다. 밤샘 검토가 필요한 사안도 본사에서 가져온 캐비닛 속 매뉴얼을 활용하여 30분 만에 정확한 검토의견서를 제출했다 [2].
+                </p>
+                
+                <h3>1.1 성과품의 일관성 보장</h3>
+                <ul class="bullet-list">
+                    <li>품질 유지: 매뉴얼에 따라 업무를 처리하면 여러 명의 기술자가 동시에 투입되어도 마치 한 사람이 작성한 것처럼 일관된 결과물을 도출할 수 있다 [3].</li>
+                    <li>신뢰도 확보: '빨리빨리'를 요구하는 촉박한 일정 속에서도 오차 없는 성과를 낼 수 있었던 근간은 바로 이 매뉴얼 경영에 있다 [3].</li>
+                </ul>
+
+                <div class="box note">
+                        <span class="bold">참고:</span> 선진국 설계사들은 자체 매뉴얼 관리가 철저하여 도용이 힘들며, 대외적으로는 결과물 중심의 성과품만 공개할 뿐 기술의 핵심인 매뉴얼은 찾아보기 어렵다 [4].
+                </div>
+
+                <hr style="border: 0; border-top: 1px solid #eee; margin: 40px 0;" />
+
+                <div class="summary-box">
+                        <span class="bold">요약</span>
+                        <ul>
+                                <li>건설 선진국을 지탱하는 핵심은 수십 년간 축적된 노하우를 초보자도 쉽게 배울 수 있게 만든 '매뉴얼'이다.</li>
+                                <li>개인의 능력에만 의존하는 국내 방식으로는 체계적으로 무장한 선진국 기술력을 따라잡기 어렵다.</li>
+                                <li>우리도 빠른 시일 내에 기술을 매뉴얼화하고 이를 S/W화하여 경쟁 우위를 점해야 한다.</li>
+                        </ul>
+                </div>
+        </article>
+
+        <!-- 1.2 기술과 매뉴얼 -->
+        <article id="sec1-2">
+                <h1>기술과 매뉴얼</h1>
+                <p>
+                        군대의 야전교범(Field Manual)이나 비행기 조종사의 위기관리 매뉴얼처럼, 토목 설계 또한 극한의 상황에서도 절차에 따라 행동할 수 있는 기준이 필요하다 [5].
+                </p>
+
+                <h2>1. 디지털 시대에 맞는 매뉴얼</h2>
+                <p>
+                        21세기인 지금, 과거 선진국의 종이 매뉴얼 방식을 그대로 따라가는 것은 유행 지난 옷을 입는 것과 같다 [6]. 이제는 4차 산업혁명 시대에 맞는 <span class="bold">디지털 내재화 매뉴얼</span>이 절실하다.
+                </p>
+
+                <div class="box note">
+                        <span class="bold">더닝-크루거 효과:</span> 능력이 부족한 사람이 자신의 실수를 인지하지 못하고 스스로를 과대평가하는 현상이다. 자체 매뉴얼도 없이 기술력을 자부하는 우리의 현주소를 경고하는 용어이기도 하다 [7, 8].
+                </div>
+        </article>
+
+        <!-- 1.3 기술축적 -->
+        <article id="sec1-3">
+                <h1>기술축적</h1>
+                <p>
+                        미국의 역학교과서 《재료역학》이 60년 넘게 업그레이드되며 기술을 축적해온 사례는 우리에게 시사하는 바가 크다 [8, 9]. 
+                </p>
+                <ul>
+                    <li><span class="bold">지식재산권 인식:</span> 국내 기술 축적이 어려운 이유는 지식재산권에 대한 인식 부재와 모든 설계사가 획일화된 결과물만 내놓는 풍토 때문이다 [8, 10].</li>
+                </ul>
+        </article>
+
+        <!-- 제2장 1절: 경쟁력 상세 분석 -->
+        <article id="sec2-1">
+                <hr />
+                <h1>경쟁력: 국내건설의 불건전한 제도와 생태계</h1>
+
+                <p>
+                                기술력으로 당당히 경쟁하며 업(業)을 유지해야 하는 토목 설계 시장에서, 우리는 지금 세계 시장에 내세울 수 있는 월등한 자체 기술 하나 없이 입으로만 해외 선진 기업과 경쟁하겠다고 외치는 모순된 상황에 놓여 있다. 우리 건설업계가 직면한 근본적인 문제는 불건전한 제도 속에 안주하며 스스로를 고립시킨 생태계에 있다.
+                </p>
+
+                <div style="display: flex; align-items: flex-start; gap: 45px; margin: 50px 0;">
+                        <div style="flex: 1;">
+                                <h2 style="margin-top: 0;">1. 공동도급 발주방식의 현실과 폐단</h2>
+                                <p>
+                                                원래 설계 경쟁입찰은 업체 '단독입찰'이 원칙이었다. 그러나 시공 분야가 일본의 'JVC' 방식을 따르고, IMF 이후 발주처 인원들의 퇴직이 늘어나면서 설계 분야도 '공동도급 방식'으로 변경되었다. 이는 업체 간 부족한 기술력을 보완하고 리스크를 분산하려는 명분으로 도입된 제도다.
+                                </p>
+                                <p>
+                                                하지만 실상은 기득권을 가진 회사들의 퇴직자 영입을 통한 '진입 장벽 형성'과 '지분 나눠주기'의 도구로 변질되었다. 이러한 환경은 국내 설계사들이 기술 혁신보다는 인적 네트워크와 영업력에 치중하게 만들었으며, 결국 글로벌 선진 업체와의 기술 격차를 더욱 벌리는 결과를 초래했다.
+                                </p>
+                        </div>
+                        <div style="width: 320px; padding-top: 5px; flex-shrink: 0; text-align: center;">
+                                <!-- [출처: 원본 PDF 39페이지 하단 이미지] -->
+                                <img src="https://wjryu777.github.io/QR/jvc_reality.png" alt="공동도급의 취지와 현실" style="width: 100%; border: 1px solid #eee;" />
+                                <span style="font-size: 12.5px; display: block; margin-top: 12px; color: #888;">(사진1) 기술 경쟁을 저해하는 공동도급 제도의 이면</span>
+                        </div>
+                </div>
+
+                <div class="note-box">
+                        <span style="color: #3498db; font-weight: bold; font-size: 18px; margin-bottom: 12px; display: block;">ⓘ 용어 설명: JVC(Joint Venture Consortium)</span>
+                        <p style="margin: 0; font-size: 14.5px; line-height: 1.7;">2개 이상의 사업주가 공동 계산에 의해 손익을 분담하며 공동 사업을 영위하는 조직체를 의미한다. 국내에서는 업체 간 자격 보완과 지역 업체 보호를 위해 주로 활용되지만, 기술 경쟁보다는 기득권 유지를 위한 수단으로 비판받기도 한다.</p>
+                </div>
+
+                <h2>2. 우리만의 제도와 방식으로 고립화된 국내 건설시장</h2>
+                <p>
+                                국내 건설업체 보호를 위해 마련된 각종 제도와 불건전한 생태계가 결합되면서, 한국 건설은 자신도 모르는 사이에 '갈라파고스화'되고 있다. 이는 글로벌 시장이 요구하는 수준과 점점 멀어지며 자생력과 경쟁력을 상실하고 있음을 뜻한다. 우리 기술자들은 의식 없이 관행을 따르며 스스로 '고립화'를 자초하고 있는 실정이다.
+                </p>
+
+                <div class="note-box">
+                        <span style="color: #3498db; font-weight: bold; font-size: 18px; margin-bottom: 12px; display: block;">ⓘ 참고: 갈라파고스화(Galapagosization)</span>
+                        <p style="margin: 0; font-size: 14.5px; line-height: 1.7;">자신들만의 표준에 입각하여 고립된 생태계를 구축함으로써 세계 시장으로부터 멀어지는 현상을 뜻한다. 과거 일본 IT 산업이 내수 시장에만 안주하다 글로벌 경쟁력을 잃은 것과 같이, 한국 건설도 과거의 방식에 집착하다 도태될 위기에 처해 있음을 상징한다.</p>
+                </div>
+
+                <h3>2.1 '천수답식' 노동집약형 사업 구조의 한계</h3>
+                <p>
+                                과거의 논농사가 하늘에서 비가 오기만을 기다리는 '천수답'이었던 것처럼, 국내 토목 설계는 오로지 정부의 발주 물량에만 의존하는 수동적인 구조를 유지해 왔다. 이러한 '천수답식 사업 구조'에서는 급변하는 시대에 대응할 기술 혁신을 기대하기 어렵다. 인구 구조의 변화와 기술자 유입 감소라는 혹독한 겨울에 대비하기 위해서는 이러한 노동집약적 관성에서 과감히 벗어나야 한다.
+                </p>
+
+                <div style="text-align: center; margin: 60px 0;">
+                        <!-- [출처: 원본 PDF 41페이지 상단 이미지] -->
+                        <img src="https://wjryu777.github.io/QR/smart_farming.png" alt="지식 기반 스마트 시스템" style="width: 100%; max-width: 850px;" />
+                        <span style="font-size: 13px; display: block; margin-top: 15px; color: #888;">(사진2) 지식 기반의 스마트 엔지니어링 시스템으로 체질을 개선해야 한다</span>
+                </div>
+
+                <h3>2.2 스마트 건설과 S/W 역량을 통한 혁신</h3>
+                <p>
+                                이제는 단순 경제성에 매몰된 수주 방식에서 벗어나 주도적으로 사업을 발굴하고 시공사와 발주처를 이끌어갈 수 있는 능력을 갖춰야 한다. 특히 설계 효율이 극대화된 'In-house S/W'를 통해 'BIM 설계'와 '스마트 건설'을 완벽히 구현하는 것이야말로 글로벌 시장이 요구하는 진정한 역량이다. 기술자 개인이 아닌 시스템과 소프트웨어에 의한 기술 내재화를 통해 '초격차'를 이루어야만 생존할 수 있다.
+                </p>
+
+                <div class="summary-box">
+                        <span style="font-weight: bold; font-size: 19px; display: block; margin-bottom: 15px; color: #333;">ⓘ 핵심 요약</span>
+                        <ul>
+                                <li>'공동도급 방식'은 도입 취지와 달리 기득권 보호와 나눠주기식 발주로 변질되어 기술 발전을 저해하고 있다.</li>
+                                <li>우리만의 제도에 안주하는 '갈라파고스화'와 정부 물량에만 매몰된 '천수답식 사업 구조'를 과감히 혁파해야 한다.</li>
+                                <li>자체 'S/W' 개발과 'BIM' 기반의 스마트 건설 능력을 확보하여 글로벌 표준에 부합하는 주도적 경쟁력을 갖춰야 한다.</li>
+                        </ul>
+                </div>
+        </article>
+
+        <!-- 제2장 2절: PQ 실적 -->
+        <article id="sec2-2">
+                <hr />
+                <h1>PQ 실적: PQ 실적 위주의 수주산업 문제점</h1>
+
+                <p>
+                                국내 토목 설계 시장에서 '수주'는 기업 운영의 생사와 직결되는 최우선 과제다. 그러나 입찰참가자격 사전심사(PQ) 실적 점수가 수주 성패를 결정하는 절대적 지표로 작용하면서, 정작 중요한 기술력 향상보다는 기술자의 발전을 가로막는 '보이지 않는 족쇄'가 되고 있다.
+                </p>
+
+                <div style="display: flex; align-items: flex-start; gap: 45px; margin: 50px 0;">
+                        <div style="flex: 1;">
+                                <h2 style="margin-top: 0;">1. 글로벌 시장의 시선: '허구적 실적'</h2>
+                                <p>
+                                                해외 업체들은 한국 기술자들이 제출하는 수백 건의 참여 실적을 보고 '신(God)이 아니고서는 도저히 이룩할 수 없는 기록'이라며 조롱 섞인 반응을 보인다. 양적으로만 부풀려진 실적은 국제 무대에서 신뢰를 떨어뜨리고 파트너십 구축을 방해하는 치명적인 요소가 된다.
+                                </p>
+                                <p>
+                                                · 기술적 질보다 수행 '횟수'를 기준으로 평가하는 제도의 모순 <br>
+                                                · 단순 반복 설계 과정에서 편의성만 추구하여 기술적 성장이 멈춘 환경 <br>
+                                                · 실질적인 전문성이 아닌 기능인의 '숙달 정도'만 확인하는 평가 방식
+                                </p>
+                        </div>
+                        <div style="width: 300px; padding-top: 5px; flex-shrink: 0; text-align: center;">
+                                <!-- [출처: 원본 PDF 42페이지 이미지] -->
+                                <img src="https://wjryu777.github.io/QR/pq_approved.png" alt="PQ 승인 이미지" style="width: 100%;" />
+                                <span style="font-size: 12.5px; display: block; margin-top: 10px; color: #888;">(사진3) 질보다 양을 중시하는 PQ 실적 평가의 한계</span>
+                        </div>
+                </div>
+
+                <div class="tip-box">
+                        <span style="color: #9b59b6; font-weight: bold; font-size: 18px; margin-bottom: 12px; display: block;">✎ 팁: 더닝-크루거 효과와 기술자의 착각</span>
+                        <p style="margin: 0; font-size: 14.5px; line-height: 1.7;">능력이 부족한 사람이 자신의 결함을 인지하지 못하고 스스로를 과대평가하는 현상이다. 자체 매뉴얼 하나 없이 PQ 실적 횟수만 믿고 기술력을 자부하는 것은 '성장을 가로막는 가장 큰 장애물'이다.</p>
+                </div>
+
+                <h2>2. 스마트 건설 시대와 실적의 무용지물화</h2>
+                <p>
+                                아인슈타인은 '같은 일을 반복하면서 다른 결과를 기대하는 것은 미친 짓이다'라고 경고했다. 스마트 건설 기술이 지배하는 새로운 시대에 생존하기 위해서는 무의미한 실적 쌓기라는 허상에서 과감히 벗어나야 한다. 독자적인 '지능형 엔지니어링 S/W'를 확보하고 BIM과 같은 질적 역량을 키우는 것만이 진정한 전문가로 거듭나는 유일한 길이다.
+                </p>
+
+                <div class="summary-box">
+                        <span style="font-weight: bold; font-size: 19px; display: block; margin-bottom: 15px; color: #333;">ⓘ 핵심 요약</span>
+                        <ul style="font-size: 15.5px; line-height: 1.6;">
+                                <li>횟수 중심의 PQ 평가는 기술자를 전문가가 아닌 단순 반복 '기능인'으로 전락시키고 있다.</li>
+                                <li>부풀려진 실적은 글로벌 시장에서 불신의 대상이 되며 기술 패러다임 대응력을 약화시킨다.</li>
+                                <li>실적의 허상을 버리고 '지능형 S/W'와 'BIM' 등 실질적인 기술 역량 확보에 집중해야 한다.</li>
+                        </ul>
+                </div>
+        </article>
+
+        <!-- 제2장 3절: 절차와 규정 -->
+        <article id="sec2-3">
+                <hr />
+                <h1>절차와 규정: 설계 시 형식적 절차와 심의의 한계</h1>
+
+                <p>
+                                설계 품질 향상을 위해 도입된 각종 자문과 심의 제도가 이제는 엔지니어링 본연의 고민 시간을 뺏는 '행정적 낭비'의 주범이 되었다. 기술자가 창의적인 해법을 찾기보다는 형식적인 보고 절차와 규정 준수에만 매몰된 현재의 시스템을 냉철하게 진단해야 한다.
+                </p>
+
+                <div style="display: flex; align-items: flex-start; gap: 45px; margin: 40px 0;">
+                        <div style="flex: 1;">
+                                <h2 style="margin-top: 0;">1. 의사결정권 부재와 책임의 회피</h2>
+                                <p>
+                                                현재의 설계 생태계에서는 설계자가 노선 선정이나 공법 결정 등에 대한 실질적인 의사결정권을 갖기 어렵다. 법적 책임이 없는 심의위원들의 기술적 간섭과 발주처의 행정 절차 준수 위주 판단 속에서 설계자는 '답습'이라는 가장 안전한 길만 선택하게 된다.
+                                </p>
+                                <p>
+                                                이러한 구조 속에서 탄생한 설계 도면은 결국 현장에서 수많은 설계 변경과 갈등의 씨앗이 된다. 누구도 책임지지 않는 구조는 기술자의 사기를 꺾고 산업 전반에 '새로운 것에 대한 거부감'을 확산시킨다.
+                                </p>
+                        </div>
+                        <div style="width: 320px; padding-top: 5px; flex-shrink: 0; text-align: center;">
+                                <!-- [출처: 원본 PDF 45페이지 상단 원형 도표] -->
+                                <img src="https://wjryu777.github.io/QR/process_waste.png" alt="비효율적 절차 도표" style="width: 100%;" />
+                                <span style="font-size: 12.5px; display: block; margin-top: 10px; color: #888;">(사진4) 늘어난 절차로 인한 비효율의 악순환</span>
+                        </div>
+                </div>
+
+                <!-- 사진5: 원본 너비 100% 적용 -->
+                <div style="text-align: center; margin: 60px 0; background: #fafafa; padding: 40px; border-radius: 8px;">
+                        <!-- [출처: 원본 PDF 45페이지 하단 흐름도] -->
+                        <img src="https://wjryu777.github.io/QR/design_process.png" alt="실시설계용역 흐름도" style="width: 100%; max-width: 850px;" />
+                        <span style="font-size: 13px; display: block; margin-top: 15px; color: #666;">(사진5) 엔지니어링 본연의 시간을 잠식하는 방대한 행정 절차 흐름도</span>
+                </div>
+
+                <div class="note-box">
+                        <span style="color: #3498db; font-weight: bold; font-size: 18px; margin-bottom: 12px; display: block;">ⓘ 참고: 엔지니어링 절대 시간의 부족</span>
+                        <p style="margin: 0; font-size: 14.5px; line-height: 1.7;">설계 절차가 기하급수적으로 늘어남에 따라 기술자가 성과품을 정교하게 다듬는 데 필요한 '절대 시간'이 턱없이 부족해졌다. 매번 절차 준비에 에너지를 쏟다 보니, 결국 제출 기한에 쫓겨 과거 방식을 그대로 답습하게 되는 악순환이 반복된다.</p>
+                </div>
+
+                <h2>2. 디지털 기술을 통한 프로세스 혁신</h2>
+                <p>
+                                실물이 없는 상태에서 말로만 오가는 형식적 심의 관행을 타파하려면 3D 기반의 'BIM' 시뮬레이션이 필요하다. 전문 지식의 디지털 전환을 통해 모든 이해관계자가 시각화된 데이터를 바탕으로 합리적이고 신속하게 의사결정을 내릴 수 있는 환경을 구축해야 한다.
+</p>
+
+                <!-- 사진6: 원본 너비 100% 적용 -->
+                <div style="text-align: center; margin: 60px 0;">
+                        <!-- [출처: 원본 PDF 47페이지 이미지] -->
+                        <img src="https://wjryu777.github.io/QR/3d_simulation.png" alt="BIM 시뮬레이션 결과" style="width: 100%; max-width: 850px;" />
+                        <span style="font-size: 12.5px; display: block; margin-top: 12px; color: #888;">(사진6) BIM을 통해 가상의 실체를 공유하며 합리적 의사결정을 내리는 모습</span>
+                </div>
+
+                <div class="summary-box">
+                        <span style="font-weight: bold; font-size: 19px; display: block; margin-bottom: 15px; color: #333;">ⓘ 핵심 요약</span>
+                        <ul style="font-size: 15.5px; line-height: 1.6;">
+                                <li>비대해진 행정 절차와 자문·심의 제도가 기술적 고민을 위한 본연의 시간을 잠식하고 있다.</li>
+                                <li>책임 회피성 의사결정 구조는 설계자를 타성에 젖게 하며 기존 방식의 '무비판적 답습'을 유도한다.</li>
+                                <li>BIM 기반의 디지털 전환을 통해 투명한 데이터를 공유함으로써 '합리적인 의사결정 체계'로 혁신해야 한다.</li>
+                        </ul>
+                </div>
+        </article>
+
+        <!-- 제2장 4절: 남의 탓 -->
+        <article id="sec2-4">
+                <hr />
+                <h1>남의 탓: 국내 건설환경에 대한 자조적 반성</h1>
+
+                <p>
+                                우리 건설 산업이 위기에 직면할 때마다 우리는 흔히 '제도가 문제다' 혹은 '환경이 불합리하다'며 외부 요인만을 탓하곤 한다. 하지만 냉정하게 우리 자신을 돌아보면, 우리 스스로가 방향성을 상실한 채 과거의 안이함에 머물러 있는 것은 아닌지 뼈아픈 성찰이 필요하다.
+                </p>
+
+                <div style="display: flex; align-items: flex-start; gap: 45px; margin: 50px 0;">
+                        <div style="width: 300px; padding-top: 5px; flex-shrink: 0; text-align: center;">
+                                <!-- [출처: 원본 PDF 48페이지 이미지] -->
+                                <img src="https://wjryu777.github.io/QR/mobius_strip.png" alt="뫼비우스의 띠" style="width: 100%;" />
+                                <span style="font-size: 12.5px; display: block; margin-top: 10px; color: #888;">(사진7) 남 탓과 답습이 반복되는 뫼비우스의 띠</span>
+                        </div>
+                        <div style="flex: 1;">
+                                <h2 style="margin-top: 0;">1. '우물 파는 일'을 외면하는 태도</h2>
+                                <p>
+                                                먼 길을 걸어 물을 길어오는 고된 일상을 반복하던 부족에게 집 앞에 우물을 파자는 제안이 들어왔을 때, 그들의 대답은 '물을 기르느라 바빠서 우물을 팔 시간이 없다'는 것이었다.
+                                </p>
+                                <p>
+                                                이는 당장의 과중한 업무를 핑계로 악순환을 끊어낼 혁신의 기회를 스스로 외면하는 우리 기술자들의 모습과 닮아 있다. 남 탓만 하며 과거에 머무는 것은 '전략적 무지'를 선택하는 것이나 다름없다.
+                                </p>
+                                <p>
+                                                · 불합리한 생태계 속에 안주하려는 '안이한 사고방식' <br>
+                                                · 4차 산업혁명의 흐름을 모른 체하는 '전략적 무지'의 위험성 <br>
+                                                · 위협을 느끼면 모래에 머리를 파묻는 '타조 증후군'
+                                </p>
+                        </div>
+                </div>
+
+                <div class="note-box">
+                        <span style="color: #3498db; font-weight: bold; font-size: 18px; margin-bottom: 12px; display: block;">ⓘ 참고: 인지적 구두쇠(Cognitive Miser) 현상</span>
+                        <p style="margin: 0; font-size: 14.5px; line-height: 1.7;">인지심리학에서는 뇌가 에너지 소비를 최소화하기 위해 익숙한 것만 따르려는 경향을 '인지적 구두쇠'라고 한다. 우리가 새로운 기술로의 전환을 불편해하고 외부 환경 탓만 하며 거부감을 느끼는 근본적인 이유다.</p>
+                </div>
+
+                <div class="summary-box">
+                        <span style="font-weight: bold; font-size: 19px; display: block; margin-bottom: 15px; color: #333;">ⓘ 핵심 요약</span>
+                        <ul style="font-size: 15.5px; line-height: 1.6;">
+                                <li>제도적 한계를 핑계로 혁신의 기회(우물 파기)를 외면하는 '전략적 무지'를 경계해야 한다.</li>
+                                <li>외부 환경 탓만 하는 수동적인 태도는 산업을 끝없는 답습의 고리 속에 고립시킨다.</li>
+                                <li>문제의 핵심을 관통하는 '킹핀' 전략을 수립하고 기술자 스스로가 변화를 주도해야 한다.</li>
+                        </ul>
+                </div>
+        </article>
+
+        <!-- 제2장 5절: 발췌) 발로 쓴 터널 이야기 -->
+        <article id="sec2-5">
+                <hr />
+                <h1>발췌) 발로 쓴 터널 이야기</h1>
+
+                <p>
+                                하홍순 저자의 현장 수기인 '발로 쓴 터널 이야기'는 우리 건설 산업의 어두운 이면을 적나라하게 고발한다. 대형 국책 사업 현장에서 벌어지는 관리 부실과 도덕적 해이가 어떤 결과를 초래하는지, 그리고 그 과정에서 기술자가 지켜야 할 '본질적인 가치'가 무엇인지 성찰을 제공한다.
+                </p>
+
+                <div style="display: flex; align-items: flex-start; gap: 45px; margin: 50px 0;">
+                        <div style="flex: 1;">
+                                <h2 style="margin-top: 0;">1. 현장 관리의 부실과 원칙의 실종</h2>
+                                <p>
+                                                현장 관리자들이 전문 지식 없이 타성에 젖었을 때, 현장은 기술의 장이 아닌 '부패의 온상'으로 전락했다. 락볼트 미시공을 숨기기 위해 타 현장의 사진을 빌려와 사진대지를 작성하거나, 고가의 무진동 암파쇄 공법 대신 저렴한 발파 공법으로 시공하고 기성금을 편취하는 행위는 산업의 신뢰를 무너뜨리는 범죄다.
+                                </p>
+                                <p>
+                                                · 전문 지식 부족으로 민원인을 '돈 뜯으러 온 사람' 취급하는 무책임함 <br>
+                                                · 시공을 포기하고 하도급 업체에만 의존하며 관리 능력을 상실한 원도급사 <br>
+                                                · 법령 미비와 주무부처의 무관심 속에 방치된 도덕적 해이
+                                </p>
+                        </div>
+                        <div style="width: 300px; padding-top: 5px; flex-shrink: 0; text-align: center;">
+                                <!-- [출처: 인쇄.pdf 1페이지 상단 우측 책 표지 이미지] -->
+                                <img src="https://wjryu777.github.io/QR/tunnel_story_cover.png" alt="책 표지" style="width: 100%;" />
+                                <span style="font-size: 12.5px; display: block; margin-top: 10px; color: #888;">(사진8) 현장의 뼈아픈 기록을 담은 기술자의 수기</span>
+                        </div>
+                </div>
+
+                <div class="note-box">
+                        <span style="color: #3498db; font-weight: bold; font-size: 18px; margin-bottom: 12px; display: block;">ⓘ 참고: 관리감독 능력의 핵심, 세무와 회계</span>
+                        <p style="margin: 0; font-size: 14.5px; line-height: 1.7;">저자는 '하도급 업체가 장난쳐서 몰랐다'는 비겁한 변명을 경계한다. 현장 관리자들에게 공학적 지식뿐만 아니라 '세무와 회계' 지식까지 갖출 것을 강력히 주문하는 이유는, 이것이 부당한 이익 편취를 막기 위한 '방어 무기'이기 때문이다.</p>
+                </div>
+
+                <!-- 사진9: 원본 너비 100% 적용 -->
+                <div style="text-align: center; margin: 60px 0;">
+                        <!-- [출처: 인쇄.pdf 1페이지 중앙 터널 이미지] -->
+                        <img src="https://wjryu777.github.io/QR/tunnel_construction.png" alt="터널 현장" style="width: 100%; max-width: 850px;" />
+                        <span style="font-size: 13px; display: block; margin-top: 15px; color: #888;">(사진9) 기술자의 신념과 원칙이 바로 서야 할 건설 현장</span>
+                </div>
+
+                <div class="summary-box">
+                        <span style="font-weight: bold; font-size: 19px; display: block; margin-bottom: 15px; color: #333;">ⓘ 핵심 요약</span>
+                        <ul style="font-size: 15.5px; line-height: 1.6;">
+                                <li>현장의 부패와 부실은 관리자의 전문지식 결여와 '원칙 망각'에서 시작된다.</li>
+                                <li>기술자 스스로 세무·회계 등 폭넓은 역량을 키워 투명한 건설 생태계를 조성해야 한다.</li>
+                                <li>자신의 업무에 대해 당당히 책임지고 끊임없이 학습하는 '신념 있는 전문가'가 되어야 한다.</li>
+                        </ul>
+                </div>
+        </article>
+
+    </main>
+
+        <div class="right-spacer"></div>
+        <script>
+                // 메뉴 토글 함수 [6]
+                function toggleChapter(chapterId) {
+                        const target = document.getElementById(chapterId);
+                        if (target) target.classList.toggle('show');
+                }
+
+                // 탭 전환 함수 [7, 8]
+                function tab(id) {
+                        // 메뉴 활성화
+                        document.querySelectorAll('nav li').forEach(li => li.classList.remove('active'));
+                        const activeItem = document.querySelector(`[onclick="tab('${id}')"]`);
+                        if(activeItem) activeItem.classList.add('active');
+
+                        // 콘텐츠 전환
+                        document.querySelectorAll('article').forEach(art => art.classList.remove('active'));
+                        const targetArt = document.getElementById(id);
+                        if(targetArt) targetArt.classList.add('active');
+
+                        // 스크롤 상단 이동
+                        document.getElementById('main-content').scrollTo(0, 0);
+                }
+        </script>
+</body>
+</html>
