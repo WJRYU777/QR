@@ -4,139 +4,117 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>인재성장팀 세미나 상세 보고</title>
+    <!-- 대시보드와 동일한 폰트 적용 [1] -->
     <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
     <style>
-        body { font-family: 'Pretendard', sans-serif; background-color: #f1f5f9; color: #334155; margin: 0; padding: 40px 0; display: flex; flex-direction: column; align-items: center; }
-        .width-wrapper { width: 100%; max-width: 1000px; box-sizing: border-box; }
-
-        header { background: #5a948b; color: white; padding: 50px 40px; border-radius: 16px; margin-bottom: 30px; }
-        header h1 { margin: 0; font-size: 2.2rem; font-weight: 700; }
-        header p { margin: 15px 0 0; opacity: 0.8; font-size: 1.1rem; }
-
-        .slide-section { background: #fff; padding: 40px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); margin-bottom: 30px; }
-        h2 { font-size: 1.6rem; color: #0f172a; border-left: 5px solid #5a948b; padding-left: 15px; margin-bottom: 30px; }
-
-        /* 항목별 컨텐츠 블록 */
-        .sub-content { margin-bottom: 40px; }
-        .sub-content:last-child { margin-bottom: 0; }
-        .sub-title { font-weight: 700; font-size: 1.15rem; margin-bottom: 15px; display: block; color: #1e293b; }
-
-        /* 사진 레이아웃 규격화 */
-        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
-        .img-container { 
-            width: 100%; height: 280px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; 
-            display: flex; align-items: center; justify-content: center; overflow: hidden; padding: 10px; box-sizing: border-box;
+        /* 대시보드 공통 스타일 반영 [1, 2] */
+        body { 
+            margin: 0; padding: 30px; 
+            font-family: 'Pretendard', sans-serif; 
+            background-color: #f4f7f9; /* 대시보드 배경색 [1] */
+            color: #2c3e50; 
+            line-height: 1.6;
         }
-        .img-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .container { max-width: 1000px; margin: 0 auto; }
 
-        .desc-text { margin: 0; color: #475569; line-height: 1.7; font-size: 0.95rem; }
+        /* 대시보드 .box 스타일 적용 [2] */
+        .content-box { 
+            background-color: #fff; 
+            border-radius: 12px; 
+            padding: 24px 30px; 
+            box-shadow: 0 4px 12px rgba(149, 157, 165, 0.1); 
+            margin-bottom: 20px;
+        }
 
-        /* 비품 카드 스타일 */
-        .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 25px; }
-        .item-card { border: 1px solid #e2e8f0; border-radius: 12px; overflow: hidden; background: #fff; }
-        .item-content { padding: 20px; }
-        .price { font-weight: 700; color: #2563eb; margin-top: 5px; display: block; }
+        /* 상세 현황 헤더 스타일 [3] */
+        .detail-header { 
+            margin-bottom: 25px; padding: 16px 20px; 
+            background: #f8fafc; border-radius: 8px; 
+            border-left: 4px solid #3b82f6; /* 대시보드 포인트 컬러 [3] */
+        }
+        h1 { margin: 0; font-size: 1.5rem; color: #111827; font-weight: 700; }
+        .meta-text { font-size: 0.95rem; color: #64748b; margin-top: 8px; }
+
+        /* 섹션 타이틀 스타일 [2, 4] */
+        h2 { 
+            font-size: 1.2rem; color: #111827; font-weight: 700;
+            margin: 0 0 16px 0; border-bottom: 2px solid #f1f5f9; padding-bottom: 10px;
+        }
+
+        /* 이미지 컨테이너 규격화 [5] */
+        .photo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+        .img-wrapper { 
+            background: #f8fafc; border: 1px solid #e5e7eb; border-radius: 8px; 
+            height: 280px; display: flex; align-items: center; justify-content: center; overflow: hidden;
+        }
+        .img-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        /* 비품 카드 레이아웃 [6, 7] */
+        .items-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; }
+        .item-card { 
+            border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; 
+            transition: background-color 0.2s; background: #fff;
+        }
+        .item-card:hover { background-color: #f9fafb; } /* 대시보드 로우 호버 효과 [6] */
+        .item-name { font-weight: 700; color: #111827; display: block; margin-bottom: 8px; }
+        .item-info { font-size: 0.9rem; color: #475569; }
+        .price-badge { 
+            display: inline-block; padding: 2px 8px; border-radius: 6px; 
+            background: #eff6ff; color: #2563eb; font-weight: 700; margin-top: 8px;
+        }
+
+        /* 이슈 텍스트 강조 [8, 9] */
+        .issue-text { color: #ef4444; font-weight: 600; }
     </style>
 </head>
 <body>
 
-    <div class="width-wrapper">
-        <header>
+<div class="container">
+    <!-- 1페이지: 타이틀 [10] -->
+    <div class="content-box">
+        <div class="detail-header">
             <h1>인재성장팀 세미나</h1>
-            <p>2026년 3월 4주차 | 류원준 선임연구원</p>
-        </header>
-
-        <!-- 섹션 1: 사이니지 진행사항 -->
-        <div class="slide-section">
-            <h2>1. 이동식 사이니지 진행사항</h2>
-            
-            <!-- 1) 설치 현황 (상단 배열 일치) -->
-            <div class="sub-content">
-                <span class="sub-title">1) 설치 현황 (3/24 완료)</span>
-                <div class="photo-grid">
-                    <div class="img-container"><img src="https://wjryu777.github.io/QR/slide2_1.png" alt="설치 전경 1"></div>
-                    <div class="img-container"><img src="https://wjryu777.github.io/QR/slide2_2.png" alt="설치 전경 2"></div>
-                </div>
-            </div>
-
-            <!-- 2) 주요 이슈 (빨간 음영 제거 및 1번과 동일 배열) -->
-            <div class="sub-content">
-                <span class="sub-title">2) 주요 이슈: 패널 결함</span>
-                <div class="photo-grid">
-                    <div class="img-container"><img src="https://wjryu777.github.io/QR/slide3_issue1.png" alt="이슈 좌측 하단"></div>
-                    <div class="img-container"><img src="https://wjryu777.github.io/QR/slide3_issue2.png" alt="이슈 우측 하단"></div>
-                </div>
-                <p class="desc-text">
-                    - <b>현상:</b> 미세 세로줄 발생 (좌측 하단, 우측 하단)<br>
-                    - <b>견적:</b> 중고 패널 사용으로 인한 수리 예정 (예상 수리비: 200)
-                </p>
-            </div>
+            <div class="meta-text">2026년 3월 4주차 | 발표자: 류원준 선임연구원 [10]</div>
         </div>
+    </div>
 
-        <!-- 슬라이드 4-9: 비품 도입 검토 [4-9] -->
-        <div class="slide-section">
-            <h2>2. 비품 도입 검토</h2>
-            <div class="items-grid">
-                
-                <!-- 1) 수납 선반 A [4] -->
-                <div class="item-card">
-                    <div class="img-container" style="height: 220px;"><img src="https://wjryu777.github.io/QR/slide4.png" alt="수납 선반 A"></div>
-                    <div class="item-content">
-                        <span class="item-name">1) 수납 선반 (A)</span>
-                        <small>사이즈: 2400 * 270 * 2000 / 1주일 소요</small>
-                        <span class="price">가격: 25만</span>
-                    </div>
-                </div>
+    <!-- 2-3페이지: 사이니지 진행사항 [11, 12] -->
+    <div class="content-box">
+        <h2>1. 이동식 사이니지 진행사항</h2>
+        <div class="photo-grid">
+            <div class="img-wrapper"><img src="images/slide2_1.png" alt="설치사진1"></div>
+            <div class="img-wrapper"><img src="images/slide2_2.png" alt="설치사진2"></div>
+        </div>
+        <p class="item-info"><strong>1) 설치 현황:</strong> 3/24 설치 완료 [11]</p>
 
-                <!-- 2) 수납 선반 B [5] -->
-                <div class="item-card">
-                    <div class="img-container" style="height: 220px;"><img src="https://wjryu777.github.io/QR/slide5.png" alt="수납 선반 B"></div>
-                    <div class="item-content">
-                        <span class="item-name">2) 수납 선반 (B)</span>
-                        <small>사이즈: 2000 * 275 * 2000 / 1주일 소요</small>
-                        <span class="price">가격: 20만</span>
-                    </div>
-                </div>
+        <div class="photo-grid" style="margin-top: 30px;">
+            <div class="img-wrapper" style="border-color: #fca5a5;"><img src="images/slide3_issue1.png" alt="이슈사진1"></div>
+            <div class="img-wrapper" style="border-color: #fca5a5;"><img src="images/slide3_issue2.png" alt="이슈사진2"></div>
+        </div>
+        <div class="item-info">
+            <strong class="issue-text">2) 주요 이슈: 패널 결함 [12]</strong><br>
+            - 현상: 미세 세로줄 발생 (좌측 하단, 우측 하단)<br>
+            - 조치: 수리비 200 (중고 패널 사용으로 인한 수리 예정)
+        </div>
+    </div>
 
-                <!-- 3) 반유리 장식장 블랙 [6] -->
-                <div class="item-card">
-                    <div class="img-container" style="height: 220px;"><img src="https://wjryu777.github.io/QR/slide6.png" alt="장식장 블랙"></div>
-                    <div class="item-content">
-                        <span class="item-name">3) 반유리 장식장 (블랙)</span>
-                        <small>사이즈: 1600 * 400 * 1900</small>
-                        <span class="price">가격: 80만원</span>
-                    </div>
-                </div>
-
-                <!-- 4) 반유리 장식장 화이트 [7] -->
-                <div class="item-card">
-                    <div class="img-container" style="height: 220px;"><img src="https://wjryu777.github.io/QR/slide7.png" alt="장식장 화이트"></div>
-                    <div class="item-content">
-                        <span class="item-name">4) 반유리 장식장 (화이트)</span>
-                        <small>사이즈: 1600 * 400 * 2000</small>
-                        <span class="price">가격: 50만원</span>
-                    </div>
-                </div>
-
-                <!-- 5) 잡지 거치대 [8] -->
-                <div class="item-card">
-                    <div class="img-container" style="height: 220px;"><img src="https://wjryu777.github.io/QR/slide8.png" alt="잡지 거치대"></div>
-                    <div class="item-content">
-                        <span class="item-name">5) 잡지 거치대</span>
-                        <small>사이즈: 1540 * 87 * 1520</small>
-                        <span class="price">가격: 45만원</span>
-                    </div>
-                </div>
-
-                <!-- 6) 회사 로고 오브제 [9] -->
-                <div class="item-card">
-                    <div class="img-container" style="height: 220px;"><img src="https://wjryu777.github.io/QR/slide9.png" alt="로고 오브제"></div>
-                    <div class="item-content">
-                        <span class="item-name">6) 회사 로고 오브제</span>
-                        <span class="price">가격: 15~20만 (예상)</span>
-                    </div>
-                </div>
-
+    <!-- 4-9페이지: 비품 목록 [13-18] -->
+    <div class="content-box">
+        <h2>2. 비품 도입 검토</h2>
+        <div class="items-grid">
+            <!-- 비품 1: 수납 선반 [13] -->
+            <div class="item-card">
+                <div class="img-wrapper" style="height: 180px; margin-bottom: 12px;"><img src="images/slide4.png"></div>
+                <span class="item-name">1) 수납 선반 (A)</span>
+                <div class="item-info">사이즈: 2400*270*2000 / 1주일 소요</div>
+                <div class="price-badge">25만</div>
+            </div>
+            <!-- 비품 3: 반유리 장식장 블랙 [15] -->
+            <div class="item-card">
+                <div class="img-wrapper" style="height: 180px; margin-bottom: 12px;"><img src="images/slide6.png"></div>
+                <span class="item-name">3) 반유리 장식장 (블랙)</span>
+                <div class="item-info">사이즈: 1600*400*1900 / 1주일 소요</div>
+                <div class="price-badge">80만원</div>
             </div>
         </div>
     </div>
